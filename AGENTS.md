@@ -18,7 +18,8 @@ This repository is a Python 3.13 project for a Dash-based directory storage anal
 - Public class / function / method には型ヒントを書く。戻り値がない場合も `-> None` を明示する。
 - 命名は PEP 8 に従う。module / file / function / variable は `snake_case`、class は `PascalCase`、module-level constant は `SCREAMING_SNAKE_CASE` を使う。
 - import は標準ライブラリ、サードパーティ、ローカル import の順にグループ化する。
-- 現時点で `ruff`、`pytest`、`mypy` は project configuration に含まれていないため、必須の検証コマンドとして扱わない。導入する場合は `pyproject.toml` に設定を追加してから AGENTS.md も更新する。
+- `pytest` と `ruff` は `pyproject.toml` で設定済み。実装変更後は原則として `uv run pytest`、`uv run ruff check .`、`uv run ruff format --check .` を実行する。
+- `mypy` は project configuration に含まれていないため、必須の検証コマンドとして扱わない。導入する場合は `pyproject.toml` に設定を追加してから AGENTS.md も更新する。
 
 ## Documentation Comments
 

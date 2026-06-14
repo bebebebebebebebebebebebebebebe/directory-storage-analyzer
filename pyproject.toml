@@ -1,7 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "directory-storage-analyzer"
 version = "0.1.0"
-description = "Add your description here"
+description = "Dash dashboard for analyzing directory storage usage."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -9,3 +13,50 @@ dependencies = [
     "pandas>=3.0.3",
     "plotly>=6.8.0",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.14.0",
+]
+
+[project.scripts]
+directory-storage-analyzer = "directory_storage_analyzer.cli:main"
+directory-storage-analyzer-profile = "directory_storage_analyzer.profiling:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["directory_storage_analyzer*"]
+
+[tool.setuptools.package-data]
+directory_storage_analyzer = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "C4",
+    "UP",
+    "SIM",
+    "BLE",
+]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
