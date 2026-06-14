@@ -15,6 +15,24 @@ uv run directory-storage-analyzer [target_path]
 
 `target_path` を省略した場合は、コマンドを実行した作業ディレクトリが初期表示の分析対象になります。起動後、ブラウザで Dash の表示 URL を開き、対象パスを確認して「分析を実行」を押してください。
 
+### GitHub から直接実行する
+
+clone せずに GitHub リポジトリから実行する場合は `uvx` を使います。`uvx` は一時的な isolated tool environment で package を実行するため、ローカル checkout や `uv sync` は不要です。
+
+```bash
+uvx --from git+https://github.com/bebebebebebebebebebebebebebebe/directory-storage-analyzer.git directory-storage-analyzer [target_path]
+```
+
+`target_path` の扱いはローカル実行時と同じです。省略した場合は、コマンドを実行した作業ディレクトリが初期表示の分析対象になります。
+
+既存の CLI option も同じように渡せます。
+
+```bash
+uvx --from git+https://github.com/bebebebebebebebebebebebebebebe/directory-storage-analyzer.git directory-storage-analyzer ~/Downloads --host 0.0.0.0 --port 8050 --cache-size 5
+```
+
+この実行方法では、GitHub からリポジトリを取得するためのネットワークアクセスとリポジトリ権限が必要です。
+
 開発時に `main.py` から起動する場合は次を使います。
 
 ```bash
