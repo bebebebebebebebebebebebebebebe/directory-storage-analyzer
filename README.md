@@ -2,28 +2,21 @@
 
 Dash でディレクトリ配下のストレージ使用状況を可視化する Python アプリケーションです。対象ディレクトリを走査し、容量の大きい場所、拡張子別の容量/件数、個別ファイルの一覧をブラウザ上で確認できます。
 
+- Python 3.13 以上
+- 依存関係管理: `uv` / `uv.lock`
+- License: [MIT](LICENSE)
+
 Last reviewed: 2026-06-14
 
 ## Quick start
 
-このプロジェクトは Python 3.13 を前提にし、依存関係は `uv.lock` で管理しています。
-
-```bash
-uv sync
-uv run directory-storage-analyzer [target_path]
-```
-
-`target_path` を省略した場合は、コマンドを実行した作業ディレクトリが初期表示の分析対象になります。起動後、ブラウザで Dash の表示 URL を開き、対象パスを確認して「分析を実行」を押してください。
-
-### GitHub から直接実行する
-
-clone せずに GitHub リポジトリから実行する場合は `uvx` を使います。`uvx` は一時的な isolated tool environment で package を実行するため、ローカル checkout や `uv sync` は不要です。
+clone せずに GitHub リポジトリからすぐ試す場合は `uvx` を使います。`uvx` は一時的な isolated tool environment で package を実行するため、ローカル checkout や `uv sync` は不要です。
 
 ```bash
 uvx --from git+https://github.com/bebebebebebebebebebebebebebebe/directory-storage-analyzer.git directory-storage-analyzer [target_path]
 ```
 
-`target_path` の扱いはローカル実行時と同じです。省略した場合は、コマンドを実行した作業ディレクトリが初期表示の分析対象になります。
+`target_path` を省略した場合は、コマンドを実行した作業ディレクトリが初期表示の分析対象になります。起動後、ブラウザで Dash の表示 URL を開き、対象パスを確認して「分析を実行」を押してください。
 
 既存の CLI option も同じように渡せます。
 
@@ -33,11 +26,22 @@ uvx --from git+https://github.com/bebebebebebebebebebebebebebebe/directory-stora
 
 この実行方法では、GitHub からリポジトリを取得するためのネットワークアクセスとリポジトリ権限が必要です。
 
+clone してローカル checkout から実行する場合は、依存関係を同期してから CLI を起動します。
+
+```bash
+git clone https://github.com/bebebebebebebebebebebebebebebe/directory-storage-analyzer.git
+cd directory-storage-analyzer
+uv sync
+uv run directory-storage-analyzer [target_path]
+```
+
 開発時に `main.py` から起動する場合は次を使います。
 
 ```bash
 uv run python main.py
 ```
+
+![directory-storage-analyzer の画面例](docs/screenshot.png)
 
 ## 画面でできること
 
@@ -82,7 +86,15 @@ uv run directory-storage-analyzer ~/Downloads --host 0.0.0.0 --port 8050 --cache
 
 分析結果はサーバー側の `AnalysisCache` に保持され、Dash の `dcc.Store` には cache 参照用の軽量な情報を保存します。`--cache-size` を小さくすると、古い分析結果が削除され、画面側で cache miss として表示される場合があります。
 
-## 開発と検証
+## Contributing
+
+開発用の依存関係を含めて環境を準備します。
+
+```bash
+git clone https://github.com/bebebebebebebebebebebebebebebe/directory-storage-analyzer.git
+cd directory-storage-analyzer
+uv sync --extra dev
+```
 
 変更後は、原則として以下を実行します。
 
@@ -100,9 +112,17 @@ uv run directory-storage-analyzer-profile <target_path> --output profile.prof --
 
 `profile.prof` は `pstats` や互換ツールで追加確認できます。標準出力には累積時間順の上位関数が表示されます。
 
+## Security
+
+正式な脆弱性報告手順はまだ整備されていません。公開運用前に [SECURITY.md](SECURITY.md) を現行プロジェクト向けに更新してください。
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 ## 注意点
 
-- 対象パスが存在しない場合は `FileNotFoundError`、ディレクトリでない場合は `NotADirectoryError` として分析に失敗します。
+- 対象パスが存在しない場合やディレクトリでない場合、UI には `分析に失敗しました: ...` と表示されます。実装上はそれぞれ `FileNotFoundError`、`NotADirectoryError` として扱われます。
 - 権限エラーなどで読み取れなかったファイルは `skipped_files` として記録され、KPI とステータスメッセージに読み取り不能件数として表示されます。
 - 分析対象にファイルがない場合は空結果として扱い、グラフやテーブルには空状態を表示します。
 - Dash 開発サーバーを手動確認で起動した場合は、確認後にプロセスを終了してください。
